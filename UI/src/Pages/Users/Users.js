@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { ProfileContext } from "../../App";
 import { userRows, userColumns } from "../../MockData/UsersData";
-
 import Sidebar from "../../layout/Sidebar/Sidebar";
 import Navbar from "../../layout/Navbar/Navbar";
 import ListInTable from "../../Components/DataTable/DataTable";
-
 import "../../App.sass";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 const Users = () => {
   const [rows, setRows] = useState(userRows);
@@ -29,16 +29,21 @@ const Users = () => {
           <div className="cell_action_div">
             <Link
               to="/users"
-              style={{ textDecoration: "none", color: "unset" }}
+              style={{ textDecoration: "none", color: "unset" , background:'orange' }}
               className="view_btn"
             >
-              View
+              Sell
             </Link>
             <div
-              className="delete_btn"
+              style={{color:'blue'}}
+            >
+              <EditIcon />
+            </div>
+            <div
+              style={{color:'gray'}}
               onClick={() => handleDelete(params.row.id)}
             >
-              Delete
+              <DeleteIcon />
             </div>
           </div>
         );

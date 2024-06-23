@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { productListTableColumns } from "../../MockData/ProductData";
-
+import { addProductAPI } from "../../Components/ActionCreator/ActionCreator";
+import { toast } from 'react-toastify';
 import Sidebar from "../../layout/Sidebar/Sidebar";
 import Navbar from "../../layout/Navbar/Navbar";
 import ListInTable from "../../Components/DataTable/DataTable";
@@ -11,18 +12,20 @@ import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUpload
 import "../../Styles/AddItem.sass";
 
 const AddProducts = () => {
-  const [file, setFile] = useState("");
+ 
   const [productName, setProductName] = useState("");
   const [price, setPrice] = useState("");
   const [brand, setBrand] = useState("");
   const [model, setModel] = useState("");
   const [quantity, setQuantity] = useState("");
+  const [supplierName, setSupplierName] = useState("");
+  const [productDescription, setProductDescription] = useState("");
   const [productRows, setProductRows] = useState([]);
   const UUID = uuidv4();
 
-  function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     // Check if price and quantity are numbers and within allowed ranges
     const parsedPrice = parseFloat(price);
     const parsedQuantity = parseFloat(quantity);
@@ -33,36 +36,64 @@ const AddProducts = () => {
       alert("Price cannot exceed 2000, and Quantity cannot exceed 20.");
       return;
     }
-
+  
     // Check if all fields are filled in
-    if (!file || !productName || !price || !brand || !model || !quantity) {
+    if ( !productName || !price || !brand || !model || !quantity) {
       alert("Please fill in all fields");
       return;
     }
-
-    // Create new product object with truncated fields if necessary
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      const newProduct = {
-        id: uuidv4(),
-        productImg: reader.result,
-        productName: productName.substring(0, 50),
-        price: parsedPrice,
-        brand: brand.substring(0, 20),
-        model: model.substring(0, 20),
-        quantity: parsedQuantity,
-      };
-
-      // Add new product to productRows and reset form fields
-      setProductRows([...productRows, newProduct]);
-      setFile("");
-      setProductName("");
-      setPrice("");
-      setBrand("");
-      setModel("");
-      setQuantity("");
+  
+    // Construct payload object
+    const payload = {
+      productName: productName,
+      productBrand: brand,
+      productStatus: model,
+      productPrice: parsedPrice,
+      productQuantity: parsedQuantity,
+      productDescription: productDescription,
+      supplierName: supplierName
     };
+  
+    try {
+      const response = await addProductAPI(payload);
+      if (response.status === 200 && response.data.businessStatusCode === 2) {
+        // navigate("/home");
+      } else {
+        // API error: Set the error message
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        toast.error("Your Session has expired. You will be redirected to Login Page.");
+      } else if (error.response && error.response.status === 429) {
+        toast.error("Too Many Requests: You have exceeded the rate limit. Please try again later.");
+      } else {
+        toast.error("There appears to be a technical issue connecting to our servers. Could you please try again later.")
+      }
+      console.error("Error fetching loan data:", error);
+    } 
+    // Display payload in console (you can remove this in production)
+    console.log("Payload :- ", payload);
+  
+    // Clear form fields and update productRows state
+    const newProduct = {
+      id: uuidv4(),
+      productName: productName.substring(0, 50),
+      price: parsedPrice,
+      brand: brand.substring(0, 20),
+      model: model.substring(0, 20),
+      quantity: parsedQuantity,
+
+    };
+  
+    setProductRows([...productRows, newProduct]);
+    setProductName("");
+    setPrice("");
+    setBrand("");
+    setModel("");
+    setQuantity("");
+    setSupplierName("");
+    setProductDescription("");
   }
 
   function handleDelete(id) {
@@ -100,6 +131,7 @@ const AddProducts = () => {
     document.title = "New Products | Admin Dashboard";
   }, []);
 
+  
   return (
     <>
       <main className="dashboard_container_main">
@@ -112,37 +144,11 @@ const AddProducts = () => {
           <div className="add_item_container">
             <div className="add_user_item_div_wrapper">
               <div className="add_user_item_div">
-                <div className="add_user_div_left">
-                  <img
-                    src={
-                      file
-                        ? URL.createObjectURL(file)
-                        : require("../../Img/no_img.png")
-                    }
-                    alt="Upload"
-                  />
-                </div>
                 <div className="form_div">
                   <form onSubmit={handleSubmit}>
-                    <div className="file_upload_div">
-                      <label
-                        htmlFor="file"
-                        className="d-flex align-items-center"
-                        style={{ color: "#20B2AA" }}
-                      >
-                        Upload Image:{" "}
-                        <DriveFolderUploadOutlinedIcon className="icon mx-1" />
-                      </label>
-                      <input
-                        type="file"
-                        id="file"
-                        onChange={(e) => setFile(e.target.files[0])}
-                        style={{ display: "none" }}
-                      />
-                    </div>
                     <div className="form_input_div">
                       <div className="form_input">
-                        <label>Product</label>
+                        <label>Product Name</label>
                         <input
                           type="text"
                           value={productName}
@@ -151,7 +157,7 @@ const AddProducts = () => {
                         />
                       </div>
                       <div className="form_input">
-                        <label>Price</label>
+                        <label>Product Price</label>
                         <input
                           type="text"
                           value={price}
@@ -161,7 +167,7 @@ const AddProducts = () => {
                         />
                       </div>
                       <div className="form_input">
-                        <label>Brand</label>
+                        <label>Product Brand</label>
                         <input
                           value={brand}
                           type="mail"
@@ -171,17 +177,17 @@ const AddProducts = () => {
                         />
                       </div>
                       <div className="form_input">
-                        <label>Model</label>
+                        <label>Product Status</label>
                         <input
                           type="text"
                           value={model}
-                          placeholder="Mac14"
+                          placeholder="Available/Not Available"
                           onChange={(e) => setModel(e.target.value)}
                           maxLength={20}
                         />
                       </div>
                       <div className="form_input">
-                        <label>Quantitiy</label>
+                        <label>Product Quantitiy</label>
                         <input
                           value={quantity}
                           type="text"
@@ -190,8 +196,26 @@ const AddProducts = () => {
                           onChange={(e) => setQuantity(e.target.value)}
                         />
                       </div>
-                    </div>
+                      <div className="form_input">
+                        <label>Product Description</label>
+                        <input
+                          value={productDescription}
+                          type="text"
+                          placeholder="product added"
+                          onChange={(e) => setProductDescription(e.target.value)}
+                        />
+                      </div>
+                      <div className="form_input">
+                        <label>Supplier Name</label>
+                        <input
+                          value={supplierName}
+                          type="text"
+                          placeholder="Ram Das"
+                          onChange={(e) => setSupplierName(e.target.value)}
+                        />
+                      </div>
                     <button type="submit">Save</button>
+                    </div>
                   </form>
                 </div>
               </div>

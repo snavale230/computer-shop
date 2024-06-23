@@ -65,7 +65,7 @@ const Home = () => {
                     }
                   />
                 </div>
-                <div className="charts_container">
+                {/* <div className="charts_container">
                   <Chart
                     title="Orders in last 4-weeks"
                     data={data}
@@ -73,7 +73,7 @@ const Home = () => {
                     fillColor2="#4caf50"
                     fillColor3="#ff9800"
                   />
-                </div>
+                </div> */}
                 <div className="summary_cards_container">
                   <SummaryCards />
                 </div>

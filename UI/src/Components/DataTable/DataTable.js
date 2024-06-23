@@ -15,7 +15,7 @@ const ListInTable = ({ rows, columns, height }) => {
           columns={columns}
           pageSize={5}
           rowsPerPageOptions={[5]}
-          checkboxSelection
+          
         />
       </DataTable>
     </>

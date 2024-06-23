@@ -1,96 +1,67 @@
-import React, { useState, useEffect } from "react";
+import React, { useState,useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import jwt_decode from "jwt-decode";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import "./Login.sass";
+import { toast } from 'react-toastify';
+import { loginAPI } from "../../Components/ActionCreator/ActionCreator";
+import shree from '../../Img/—Pngtree—shree hindi calligraphy with dry_6482721.png'
 
 const Login = (props) => {
   const navigate = useNavigate();
   const [userName, setUserName] = useState("");
   const [profilePic, setProfilePic] = useState(null);
   const [password, setPassword] = useState("");
-  const [selectedRandomAdmin, setSelectedRandomAdmin] = useState("");
+  const [buttonDisabled, setButtonDisabled] = useState(true); // State to disable button initially
+
+  // Update buttonDisabled state based on form validity
+  useEffect(() => {
+    setButtonDisabled(!(userName && password)); // Disable button if username or password is empty
+  }, [userName, password]);
 
   const handleUserNameChange = (e) => {
-    setUserName(
-      e.target.value.charAt(0).toUpperCase() + e.target.value.substring(1)
-    );
+    setUserName(e.target.value.charAt(0).toUpperCase() + e.target.value.substring(1));
   };
 
   const handlePassword = (e) => {
     setPassword(e.target.value);
   };
 
-  const handleProfilePicChange = (e) => {
-    const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setProfilePic(reader.result);
-    };
-  };
-
-  const handleLogin = () => {
-    if (!profilePic) {
-      alert("Please upload a profile pic and try again.");
-    } else if (userName === "" || password === "") {
-      alert("Enter username and password!");
-    } else if (
-      (userName !== "" &&
-        userName.trim().toLowerCase() !== selectedRandomAdmin) ||
-      (password !== "" && password.trim().toLowerCase() !== randomPassword)
-    ) {
-      alert("Wrong credentials. Please try again.");
-    } else {
-      localStorage.setItem("userName", userName);
-      localStorage.setItem("profilePic", profilePic);
-      // Event dispatching logic moved inside handleLogin to prevent bad setState so that event will only be dispatched when necessary, and not during the rendering process.
-      const profileUpdatedEvent = new CustomEvent("profileUpdated", {
-        detail: { userName, profilePic },
-      });
-      window.dispatchEvent(profileUpdatedEvent);
-      navigate("/home");
-    }
-  };
-
-  function handleCallbackResponse(response) {
-    const user = jwt_decode(response.credential);
-    const googleUserName = user.given_name;
-    const googleProfilePic = user.picture;
-
-    setUserName(googleUserName);
-    setProfilePic(googleProfilePic);
-    localStorage.setItem("userName", googleUserName);
-    localStorage.setItem("profilePic", googleProfilePic);
-
-    const googleProfileUpdatedEvent = new CustomEvent("googleProfileUpdated", {
-      detail: { googleUserName, googleProfilePic },
-    });
-    window.dispatchEvent(googleProfileUpdatedEvent);
+  const handleLogin = async (e) => {
     navigate("/home");
-  }
-
-  const randomPassword = "admin005";
-  useEffect(() => {
-    const randomAdmins = ["sam005", "sachin005", "max005"];
-    const randomIndex = Math.floor(Math.random() * randomAdmins.length);
-    setSelectedRandomAdmin(randomAdmins[randomIndex]);
-    document.title = "Login | Admin Dashboard";
-
-    /* global google */
-    google.accounts.id.initialize({
-      client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-      callback: handleCallbackResponse,
-    });
-
-    google.accounts.id.renderButton(document.getElementById("signInDiv"), {
-      theme: "outline",
-      size: "large",
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+    e.preventDefault();
+    localStorage.removeItem("timerStartTime");
+    
+    const requestBody = {
+      mobile: userName,
+      password: password
+    };
+  
+    try {
+      const response = await loginAPI(requestBody);
+      if (response.status === 200 && response.data.businessStatusCode === 2) {
+        // navigate("/home");
+      } else {
+        // API error: Set the error message
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        toast.error("Your Session has expired. You will be redirected to Login Page.");
+        navigate("/");
+      } else if (error.response && error.response.status === 429) {
+        toast.error("Too Many Requests: You have exceeded the rate limit. Please try again later.");
+      } else {
+        toast.error("There appears to be a technical issue connecting to our servers. Could you please try again later.")
+      }
+      console.error("Error fetching loan data:", error);
+    } 
+  };
+  
+  const gradientStyle = {
+    height: '100vh', 
+    background: 'linear-gradient(to right, #b0bec5, #546e7a)'
+  };
   return (
     <>
       <motion.div
@@ -99,9 +70,10 @@ const Login = (props) => {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
-        <div className="login_page">
-          <h5>Login to Admin Dashboard</h5>
-          <div className="profile_pic_container">
+        <div className="login_page shadow" style={gradientStyle} >
+          <img src={shree} alt="Image not found"  style={{width:'400px',height:'270px'}}/>
+          <h5 style={{color:'white'}}>Login to Shree Computers</h5>
+          {/* <div className="profile_pic_container">
             <label
               htmlFor="profilePic"
               className="d-flex align-items-start upload_pic_label"
@@ -117,61 +89,33 @@ const Login = (props) => {
               style={{ display: "none" }}
             />
             {profilePic && <img src={profilePic} alt="Avatar" />}
-          </div>
-          <div className="username_container">
-            <label htmlFor="username">Username</label>
+          </div> */}
+          <div className="username_container ">
+            <label htmlFor="username">Mobile No.</label>
             <input
+            className="form-control"
               type="text"
+              maxLength={10}
               id="username"
               value={userName}
               onChange={handleUserNameChange}
-              placeholder={`${
-                selectedRandomAdmin
-                  ? selectedRandomAdmin.charAt(0).toUpperCase() +
-                    selectedRandomAdmin.substring(1)
-                  : ""
-              }`}
               required
             />
           </div>
           <div className="password_container">
             <label htmlFor="password">Password</label>
             <input
-              type="text"
+            className="form-control"
+              type="text" // Changed to password type
               id="password"
               value={password}
               onChange={handlePassword}
-              placeholder={`${
-                randomPassword
-                  ? randomPassword.charAt(0).toUpperCase() +
-                    randomPassword.substring(1)
-                  : ""
-              }`}
               required
             />
           </div>
-          <button onClick={handleLogin} style={{ fontWeight: 600 }}>
+          <button onClick={handleLogin} style={{ fontWeight: 600 }} disabled={buttonDisabled}>
             Login
           </button>
-
-          <h6 className="d-flex align-items-center justify-content-center my-2">
-            Or
-          </h6>
-
-          <div
-            id="signInDiv"
-            className="d-flex align-items-center justify-content-center my-2"
-            onClick={handleCallbackResponse}
-          ></div>
-
-          <div className="signin_note mt-2">
-            <p>
-              Please use the provided placeholder values (case-insensitive) as
-              username and password in the designated fields to access the
-              dashboard.
-              <span> A profile picture is required to sign in. Thank you.</span>
-            </p>
-          </div>
         </div>
       </motion.div>
     </>

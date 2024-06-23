@@ -47,36 +47,26 @@ const Sidebar = () => {
               style={{ textDecoration: "none", color: "unset" }}
             >
               <li>
-                <PersonOutlineIcon className="icon" />
-                <p>Users</p>
+                <StoreIcon className="icon" />
+                <p>Available Products</p>
               </li>
             </Link>
-            <Link
+            {/* <Link
               to="/products"
               style={{ textDecoration: "none", color: "unset" }}
             >
               <li>
                 <StoreIcon className="icon" />
-                <p>Products</p>
+                <p>Available Products</p>
               </li>
-            </Link>
+            </Link> */}
             <Link
               to="/orders"
               style={{ textDecoration: "none", color: "unset" }}
             >
               <li>
                 <CreditCardIcon className="icon" />
-                <p>Orders</p>
-              </li>
-            </Link>
-            <h6 className="title">For Admins</h6>
-            <Link
-              to="/users/new"
-              style={{ textDecoration: "none", color: "unset" }}
-            >
-              <li>
-                <PersonAddAltIcon className="icon" />
-                <p>Add a user</p>
+                <p>All Transactions</p>
               </li>
             </Link>
             <Link

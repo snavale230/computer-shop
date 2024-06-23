@@ -5,130 +5,128 @@ export const userColumns = [
     field: "id",
     headerName: "ID",
     headerClassName: "custom_header",
-    width: 100,
+    width: 50,
   },
   {
-    field: "user",
-    headerName: "User",
+    field: "product_name",
+    headerName: "Product",
     headerClassName: "custom_header",
-    width: 200,
-    renderCell: (params) => {
-      return (
-        <div className="cell_img_div">
-          <img
-            className="cell_img"
-            src="https://sachinsamal005.netlify.app/img/sachin-samal.png"
-            alt="avatar"
-          />
-          {params.row.username}
-        </div>
-      );
-    },
+    width: 90,
   },
   {
-    field: "email",
-    headerName: "Email",
+    field: "category",
+    headerName: "Category",
     headerClassName: "custom_header",
-    width: 230,
-    renderCell: (params) => {
-      return (
-        <p className={`${params.row.email}`}>
-          {params.row.username.includes(" ")
-            ? params.row.username.split(" ").join("").toLowerCase() +
-              (params.row.age || "") +
-              "@gmail.com"
-            : params.row.username.toLowerCase() +
-              (params.row.age || "") +
-              "@gmail.com"}
-        </p>
-      );
-    },
+    width: 70,
+  },
+  {
+    field: "product_brand",
+    headerName: "Brand",
+    headerClassName: "custom_header",
+    width: 70,
   },
 
   {
-    field: "age",
-    headerName: "Age",
+    field: "product_price",
+    headerName: "Price",
     headerClassName: "custom_header",
-    width: 100,
+    width: 70,
   },
   {
-    field: "status",
+    field: "product_status",
     headerName: "Status",
     headerClassName: "custom_header",
-    width: 150,
-    renderCell: (params) => {
-      return (
-        <div
-          className={`cell_status_div px-2 py-1 ${
-            params.row.age < 40
-              ? "active"
-              : params.row.age > 40 && params.row.age < 60
-              ? "pending"
-              : "passive"
-          }`}
-        >
-          {params.row.age < 40
-            ? "Active"
-            : params.row.age > 40 && params.row.age < 60
-            ? "Pending"
-            : "Passive"}
-        </div>
-      );
-    },
+    width: 80,
+  },
+  {
+    field: "product_quantity",
+    headerName: "Quantity",
+    headerClassName: "custom_header",
+    width: 70,
+  },
+  {
+    field: "supplier_name",
+    headerName: "Supplier Name",
+    headerClassName: "custom_header",
+    width: 120,
+  },
+  {
+    field: "supplier_contact",
+    headerName: "Contact",
+    headerClassName: "custom_header",
+    width: 80,
+  },
+  {
+    field: "date_added",
+    headerName: "Added Date",
+    headerClassName: "custom_header",
+    width: 110,
+  },
+  {
+    field: "last_updated",
+    headerName: "Updated Date",
+    headerClassName: "custom_header",
+    width: 110,
   },
 ];
 
 export const userRows = [
   {
     id: 1,
-    username: "Snow",
-    age: 35,
+    product_name: "Mounse",
+    "category": null,
+    "date_added": "2024-06-15T23:02:40.985934Z",
+    "last_updated": "2024-06-15T23:02:40.985934Z",
+    product_brand: "HP",
+    "product_description": "Mouse Added",
+    product_price: "500.00",
+    product_quantity: 3,
+    product_status: "available",
+    "supplier_contact": null,
+    "supplier_name": "Sharad Kasar"
+  },
+   {
+    "category": null,
+    "date_added": "2024-06-15T23:17:01.756211Z",
+    "last_updated": "2024-06-15T23:17:01.756211Z",
+    "product_brand": "HP",
+    "product_description": "Mouse Added",
+    "id": "PI1",
+    "product_name": "Mounse",
+    "product_price": "500.00",
+    "product_quantity": 3,
+    "product_status": "available",
+    "supplier_contact": null,
+    "supplier_name": "Sharad Kasar"
   },
   {
-    id: 2,
-    username: "Jamie Lannister",
-    age: 42,
+    "category": null,
+    "date_added": "2024-06-15T23:19:07.095058Z",
+    "last_updated": "2024-06-15T23:19:07.095058Z",
+    "product_brand": "DELL",
+    "product_description": "Mouse Added",
+    "id": "PI2",
+    "product_name": "Keyboard",
+    "product_price": "500.00",
+    "product_quantity": 3,
+    "product_status": "available",
+    "supplier_contact": null,
+    "supplier_name": "Sharad Kasar"
   },
   {
-    id: 3,
-    username: "Lannister",
-    age: 45,
-  },
-  {
-    id: 4,
-    username: "Stark",
-    age: 21,
-  },
-  {
-    id: 5,
-    username: "Targaryen",
-    age: 22,
-  },
-  {
-    id: 6,
-    username: "Melisandre",
-    age: 15,
-  },
-  {
-    id: 7,
-    username: "Clifford",
-    age: 44,
-  },
-  {
-    id: 8,
-    username: "Frances",
-    age: 36,
-  },
-  {
-    id: 9,
-    username: "Roxie",
-    age: 65,
-  },
-  {
-    id: 10,
-    username: "Maxie",
-    age: 71,
-  },
+    "category": null,
+    "date_added": "2024-06-23T16:16:55.07683Z",
+    "last_updated": "2024-06-23T16:16:55.07683Z",
+    "product_brand": "DELL",
+    "product_description": "Mouse Added",
+    "id": "PI3",
+    "product_name": "Pendrive",
+    "product_price": "500.00",
+    "product_quantity": 3,
+    "product_status": "available",
+    "supplier_contact": null,
+    "supplier_name": "Sharad Kasar"
+  }
 ];
 
 // ----------------------------------

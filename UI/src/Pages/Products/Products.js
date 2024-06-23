@@ -27,17 +27,7 @@ const Products = () => {
           <Navbar />
           <div className="products_list_container">
             <div className="products_list_container_title">
-              <h4
-                className="p-2 mb-0"
-                style={{
-                  fontWeight: 700,
-                  margin: "0.5rem 0 0 0",
-                  padding: "0 0.5rem",
-                  color: "#20B2AA",
-                }}
-              >
-                Products handled by Admin | {userName}
-              </h4>
+            
             </div>
             <ListInTable
               rows={productListTableRows}

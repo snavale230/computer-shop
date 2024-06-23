@@ -61,19 +61,10 @@ const Orders = () => {
               >
                 Orders handled by Admin | {userName}
               </h4>
-              <div className="order_div_wrapper">
+              {/* <div className="order_div_wrapper">
                 <OrderSummary selectedRow={selectedRow} />
-                <div className="charts_container">
-                  <Chart
-                    title="Order handled by Admin ( Last 4 weeks)"
-                    data={chartData}
-                    fillColor1="#2196f3"
-                    fillColor2="#4caf50"
-                    fillColor3="#ff9800"
-                    onRowClick={handleRowClick}
-                  />
-                </div>
-              </div>
+               
+              </div> */}
               <div className="transaction_list_div">
                 <h4 className="transaction_list_div_title">
                   Last Transactions
