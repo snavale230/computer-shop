@@ -78,3 +78,8 @@ ALTER TABLE sales ALTER COLUMN sale_id TYPE varchar(55) USING sale_id::varchar(5
 CREATE SEQUENCE sales_seq START WITH 1 INCREMENT BY 1; 
 
 ALTER TABLE sales alter column sale_id set DEFAULT concat('S', nextval('sales_seq'::regclass));
+
+
+-- 23 June 2024
+ALTER TABLE sales ADD COLUMN description text;
+

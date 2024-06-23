@@ -37,15 +37,27 @@ func (s *Server) InitializeRoutes() error {
 	s.Router.POST("/shree-computer-shop/add-product/", func(c *gin.Context) {
 		s.AddProduct(c)
 	})
-	s.Router.POST("/shree-computer-shop/sell-product/", func(c *gin.Context) {
+	s.Router.POST("/shree-computer-shop/sale-product/", func(c *gin.Context) {
 		s.SellProduct(c)
 	})
-	s.Router.GET("/shree-computer-shop/available-product/", func(c *gin.Context) {
+	s.Router.GET("/shree-computer-shop/available-products/", func(c *gin.Context) {
 		s.AvailableProducts(c)
 	})
-	// s.Router.GET("/vijay-shop/fetch-appointment-audit/", func(c *gin.Context) {
-	// 	s.FetchAppointmentFormAudit(c)
-	// })
+	s.Router.GET("/shree-computer-shop/fetch-sale-products/", func(c *gin.Context) {
+		s.FetchSaleProducts(c)
+	})
+	s.Router.GET("/shree-computer-shop/add-product-history/", func(c *gin.Context) {
+		s.AddProductHistory(c)
+	})
+	s.Router.POST("/shree-computer-shop/delete-product/", func(c *gin.Context) {
+		s.DeleteProduct(c)
+	})
+	s.Router.POST("/shree-computer-shop/fetch-data/", func(c *gin.Context) {
+		s.FetchDataGenericAPI(c)
+	})
+	s.Router.POST("/shree-computer-shop/fetch-product-names-or-brands/", func(c *gin.Context) {
+		s.FetchProductNames(c)
+	})
 
 	// Start the server on port 1421
 	err := s.Router.Run(":1421")

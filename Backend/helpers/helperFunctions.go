@@ -30,6 +30,14 @@ func ErrorLogger(err error, msg string) {
 	log.Error().Err(err).Msg(msg)
 }
 
+// DebugLogger logs a debug message using the standard logging library.
+// It takes a message as an input parameter.
+// Example usage: DebugLogger("This is a debug message")
+func DebugLogger(msg string) {
+	msg = strings.ToLower(msg)
+	log.Debug().Msg(msg)
+}
+
 // IsValidIndianMobileNumber checks if the given mobile number is a valid Indian mobile number.
 func IsValidIndianMobileNumber(number string) bool {
 	// Define a regular expression for a valid Indian mobile number

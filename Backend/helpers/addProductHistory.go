@@ -1,8 +1,6 @@
 package helpers
 
 import (
-	"encoding/json"
-
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/jackc/pgx/v5/stdlib" // Standard library bindings for pgx
@@ -10,7 +8,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func (s *Server) AvailableProducts(c *gin.Context) {
+func (s *Server) AddProductHistory(c *gin.Context) {
 	log.Debug().Msg("Connecting to database")
 	// Open a connection to the database
 	db, err := sqlx.Open("postgres", Dsn)
@@ -30,7 +28,7 @@ func (s *Server) AvailableProducts(c *gin.Context) {
 
 	var viewListData []map[string]interface{}
 
-	query := `SELECT * FROM products WHERE product_status = 'available' AND product_quantity > 0`
+	query := `SELECT * FROM products ORDER BY last_updated DESC`
 
 	rows, err := db.Queryx(query)
 	if err != nil {
@@ -60,38 +58,9 @@ func (s *Server) AvailableProducts(c *gin.Context) {
 	}
 
 	c.AbortWithStatusJSON(Ok, gin.H{
-		"availableProductList": viewListData,
-		"httpResponseCode":     Ok,
-		"businessStatusCode":   BusinessSuccess,
+		"addProductHistory":  viewListData,
+		"httpResponseCode":   Ok,
+		"businessStatusCode": BusinessSuccess,
 	})
 
-}
-
-// convertJSONBColumns converts JSONB byte slices to string maps
-func convertJSONBColumns(m map[string]interface{}) {
-	InfoLogger("The task to convertJSONBColumns has started")
-	for k, v := range m {
-		if b, ok := v.([]byte); ok {
-			// Check if the field represents a JSONB column
-			if isJSON(b) {
-				var jsonMap map[string]interface{}
-				if err := json.Unmarshal(b, &jsonMap); err == nil {
-					m[k] = jsonMap
-				} else {
-					// Handle unmarshaling error
-					m[k] = string(b) // Fallback to string representation if JSON parsing fails
-				}
-			} else {
-				m[k] = string(b) // Convert byte slice to string
-			}
-		}
-	}
-	InfoLogger("The task to convertJSONBColumns has Completed")
-}
-
-// isJSON checks if a byte slice is valid JSON
-func isJSON(b []byte) bool {
-	// InfoLogger("The task to isJSON is Executed")
-	var js json.RawMessage
-	return json.Unmarshal(b, &js) == nil
 }
