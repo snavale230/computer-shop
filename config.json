@@ -1,0 +1,10 @@
+{
+    "database": {
+        "user": "postgres",
+        "name": "postgres",
+        "password": "Pass@123",
+        "host": "localhost",
+        "port": "5435",
+        "sslMode": "disable"
+    }
+}
