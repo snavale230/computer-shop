@@ -1,13 +1,14 @@
 import React, { useState, useContext, useEffect } from "react";
 import { LoaderContext, ProfileContext } from "../../App";
-import { transactionTableData } from "../../MockData/TransactionData";
 import { data } from "../../MockData/ChartData";
 
 import Loader from "../../Components/Loader/Loader";
 import Sidebar from "../../layout/Sidebar/Sidebar";
 import Navbar from "../../layout/Navbar/Navbar";
-import Chart from "../Home/Chart";
 import TransactionDataTable from "./TransactionDataTable";
+import SellDataTable from "./SalesTransactionTable";
+import { addProductHistoryAPI, sellProductHistoryAPI } from "../../Components/ActionCreator/ActionCreator";
+import { toast } from "react-toastify";
 import OrderSummary from "./OrderSummary";
 
 import "../../App.sass";
@@ -17,15 +18,46 @@ import "../../Pages/Home/Home.sass";
 const Orders = () => {
   const { isLoading } = useContext(LoaderContext);
   const { userName } = useContext(ProfileContext);
-  const [selectedRowId, setSelectedRowId] = useState(
-    transactionTableData[0]?.id
-  );
+  const [selectedRowId, setSelectedRowId] = useState([]);
   const [chartData, setChartData] = useState(data);
-  const selectedRow = transactionTableData.find(
-    (row) => row.id === selectedRowId
-  );
+  const [activeTab, setActiveTab] = useState("products"); // Track active tab
 
-  // Change the corresponding chart, bar graph and list data if the transaction table row is clicked
+  // Fetch data based on the active tab
+  const fetchData = async (tab) => {
+    try {
+      if (tab === "products") {
+        const response = await addProductHistoryAPI();
+        const rowsWithId = response.data.addProductHistory.map((item) => ({
+          ...item,
+          id: item.product_id,
+        }));
+        setSelectedRowId(rowsWithId);
+      } else if (tab === "sales") {
+        const response = await sellProductHistoryAPI();
+        const rowsWithId = response.data.saleProductList.map((item) => ({
+          ...item,
+          id: item.product_id,
+        }));
+        setSelectedRowId(rowsWithId);
+      }
+    } catch (error) {
+      toast.error("Error fetching data.");
+    }
+  };
+
+  // Load products data initially
+  useEffect(() => {
+    document.title = "Orders | Admin Dashboard";
+    fetchData("products");
+  }, []);
+
+  // Fetch data when the active tab changes
+  useEffect(() => {
+    if (activeTab) {
+      fetchData(activeTab);
+    }
+  }, [activeTab]);
+
   const handleRowClick = (id) => {
     setSelectedRowId(id);
     const newChartData = chartData.map((week) => ({
@@ -37,10 +69,6 @@ const Orders = () => {
     setChartData(newChartData);
   };
 
-  useEffect(() => {
-    document.title = "Orders | Admin Dashboard";
-  }, []);
-
   return (
     <>
       {isLoading ? (
@@ -51,28 +79,21 @@ const Orders = () => {
           <div className="dashboard_container_right_panel">
             <Navbar />
             <div className="order_info_container_div">
-              <h4
-                style={{
-                  fontWeight: 700,
-                  margin: "0.5rem 0 0 0",
-                  padding: "0 0.5rem",
-                  color: "#20B2AA",
-                }}
-              >
+              <h4 style={{ fontWeight: 700, margin: "0.5rem 0", color: "#20B2AA" }}>
                 Orders handled by Admin | {userName}
               </h4>
-              {/* <div className="order_div_wrapper">
-                <OrderSummary selectedRow={selectedRow} />
-               
-              </div> */}
-              <div className="transaction_list_div">
-                <h4 className="transaction_list_div_title">
-                  Last Transactions
-                </h4>
-                <TransactionDataTable
-                  onRowClick={handleRowClick}
-                  tableRows={transactionTableData}
-                />
+              {/* Tab navigation */}
+              <div className="tab-navigation">
+                <button onClick={() => setActiveTab("products")}>Add Products History</button>
+                <button onClick={() => setActiveTab("sales")}>Sell Product History</button>
+              </div><hr/>
+              {/* Tab content */}
+              <div className="tab-content">
+                {activeTab === "products" ? (
+                  <TransactionDataTable onRowClick={handleRowClick} tableRows={selectedRowId} />
+                ) : (
+                  <SellDataTable onRowClick={handleRowClick} tableRows={selectedRowId} />
+                )}
               </div>
             </div>
           </div>

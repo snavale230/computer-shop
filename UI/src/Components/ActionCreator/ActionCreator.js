@@ -5,7 +5,7 @@ const domainURL = "http://localhost:1421";
 const loginAPI = async (requestBody) => {
   try {
     const response = await axios.post(
-      "http://localhost:1421/shree-computer-shop/user-login/",
+      "http://localhost:1421/shree-computer-shop/user-login",
       requestBody,
       {
         headers: {
@@ -38,7 +38,7 @@ const addProductAPI = async (requestBody) => {
 
 const fetchAllProductsAPI = async () => {
   try {
-    const response = await axios.get(
+    const response = await axios.post(
       domainURL + "/shree-computer-shop/available-products",
       {
         withCredentials: true,
@@ -66,11 +66,56 @@ const sellProductAPI = async (requestBody) => {
     }
   };
 
+  const sellProductHistoryAPI = async (requestBody) => {
+    try {
+      const response = await axios.post(
+        domainURL + "/shree-computer-shop/fetch-sale-products",
+        requestBody,
+        {
+          withCredentials: true,
+        }
+      );
+  
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
 
+  const addProductHistoryAPI = async (requestBody) => {
+    try {
+      const response = await axios.post(
+        domainURL + "/shree-computer-shop/add-product-history",
+        requestBody,
+        {
+          withCredentials: true,
+        }
+      );
+  
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
 
+  const deleteProductAPI = async (requestBody) => {
+    try {
+      const response = await axios.post(
+        domainURL + "/shree-computer-shop/delete-product",
+        requestBody,
+        {
+          withCredentials: true,
+        }
+      );
+  
+      return response;
+    } catch (error) {
+      throw error;
+    }
+  };
 export {
   fetchAllProductsAPI,
   addProductAPI,
   loginAPI,
-  sellProductAPI
+  sellProductAPI,addProductHistoryAPI,sellProductHistoryAPI,deleteProductAPI
 };

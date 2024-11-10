@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import "./Login.sass";
 import { toast } from 'react-toastify';
 import { loginAPI } from "../../Components/ActionCreator/ActionCreator";
-import shree from '../../Img/—Pngtree—shree hindi calligraphy with dry_6482721.png';
+import shree from '../../Img/logo.png';
 
 const Login = (props) => {
   const navigate = useNavigate();

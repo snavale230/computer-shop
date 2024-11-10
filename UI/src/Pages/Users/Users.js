@@ -10,11 +10,12 @@ import { userRows, userColumns } from "../../MockData/UsersData";
 import "../../App.sass";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
-import { fetchAllProductsAPI ,sellProductAPI} from "../../Components/ActionCreator/ActionCreator";
+import { fetchAllProductsAPI, sellProductAPI ,deleteProductAPI} from "../../Components/ActionCreator/ActionCreator";
 
 const Users = () => {
   const [rows, setRows] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState(null); // New state
   const [formData, setFormData] = useState({
     productQuantity: 1,
     customerMobile: "",
@@ -23,32 +24,46 @@ const Users = () => {
   });
   const navigate = useNavigate();
 
-  function handleDelete(id) {
-    setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+  const handleDelete = async(id) => {
+    try {
+      const payload = {
+        ProductId:id
+      };
+
+      const response = await deleteProductAPI(payload);
+      if (response.data.businessStatusCode === 2) {
+        setRows((prevRows) => prevRows.filter((row) => row.id !== id));
+        toast.success("Product Deleted successfully!");
+      } else {
+        toast.error("Failed to save product.");
+      }
+    } catch (error) {
+      toast.error("An error occurred while saving.");
+    }
+
   }
 
-  const handleSellClick = () => {
-    setShowModal(true); // Show the modal when "Sell" button is clicked
+  const handleSellClick = (id) => {
+    setSelectedProductId(id); // Set the selected product ID
+    setShowModal(true); // Show the modal
   };
 
   const handleCloseModal = () => {
-    setShowModal(false); // Close the modal
+    setShowModal(false);
   };
 
   const handleSave = async () => {
     try {
       const payload = {
-        "productQuantity":formData.productQuantity,
-        "productId": "PI3",
-        "customerMobile": formData.customerMobile,
-        "customerName": formData.customerName,
-        "productPrice": formData.productPrice
-    }
+        productQuantity:parseInt(formData.productQuantity, 10),
+        productId: selectedProductId, // Use the selected product ID here
+        customerMobile: formData.customerMobile,
+        customerName: formData.customerName,
+        productPrice: formData.productPrice,
+      };
 
-      
-      // Call your API for saving the data (example API call)
       const response = await sellProductAPI(payload);
-      if (response.ok) {
+      if (response.data.businessStatusCode === 2) {
         toast.success("Product sold successfully!");
         setShowModal(false); // Close the modal after saving
       } else {
@@ -69,42 +84,43 @@ const Users = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let response = {
-          availableProductList: [
-            {
-              category: null,
-              date_added: "2024-06-15T23:17:01.756211Z",
-              last_updated: "2024-06-23T23:05:36.553064Z",
-              product_brand: "DELL",
-              product_description: "Mouse Added",
-              product_id: "PI1",
-              product_name: "Mounse",
-              product_price: "500.00",
-              product_quantity: 3,
-              product_status: "available",
-              supplier_contact: null,
-              supplier_name: "Sharad Kasar",
-            },
-            {
-              category: null,
-              date_added: "2024-06-15T23:19:07.095058Z",
-              last_updated: "2024-06-23T23:05:36.553064Z",
-              product_brand: "HP1",
-              product_description: "Mouse Added",
-              product_id: "PI2",
-              product_name: "Mounse",
-              product_price: "500.00",
-              product_quantity: 3,
-              product_status: "available",
-              supplier_contact: null,
-              supplier_name: "Sharad Kasar",
-            },
-          ],
-          businessStatusCode: 2,
-          httpResponseCode: 200,
-        };
+        const response = await fetchAllProductsAPI();
+        // let response = {
+        //   availableProductList: [
+        //     {
+        //       category: null,
+        //       date_added: "2024-06-15T23:17:01.756211Z",
+        //       last_updated: "2024-06-23T23:05:36.553064Z",
+        //       product_brand: "DELL",
+        //       product_description: "Mouse Added",
+        //       product_id: "PI1",
+        //       product_name: "Mounse",
+        //       product_price: "500.00",
+        //       product_quantity: 3,
+        //       product_status: "available",
+        //       supplier_contact: null,
+        //       supplier_name: "Sharad Kasar",
+        //     },
+        //     {
+        //       category: null,
+        //       date_added: "2024-06-15T23:19:07.095058Z",
+        //       last_updated: "2024-06-23T23:05:36.553064Z",
+        //       product_brand: "HP1",
+        //       product_description: "Mouse Added",
+        //       product_id: "PI2",
+        //       product_name: "Mounse",
+        //       product_price: "500.00",
+        //       product_quantity: 3,
+        //       product_status: "available",
+        //       supplier_contact: null,
+        //       supplier_name: "Sharad Kasar",
+        //     },
+        //   ],
+        //   businessStatusCode: 2,
+        //   httpResponseCode: 200,
+        // };
 
-        const rowsWithId = response.availableProductList.map((item) => ({
+        const rowsWithId = response.data.availableProductList.map((item) => ({
           ...item,
           id: item.product_id,
         }));
@@ -125,15 +141,7 @@ const Users = () => {
           <Navbar />
           <UserTable className="users_list_container">
             <div className="users_list_container_title">
-              <h4
-                className="p-2 mb-0"
-                style={{
-                  fontWeight: 700,
-                  margin: "0.5rem 0 0 0",
-                  padding: "0 0.5rem",
-                  color: "#20B2AA",
-                }}
-              >
+              <h4 className="p-2 mb-0" style={{ fontWeight: 700, margin: "0.5rem 0 0 0", padding: "0 0.5rem", color: "#20B2AA" }}>
                 Users handled by Admin
               </h4>
             </div>
@@ -149,22 +157,15 @@ const Users = () => {
                   renderCell: (params) => (
                     <div className="cell_action_div">
                       <button
-                        onClick={handleSellClick}
-                        style={{
-                          background: "orange",
-                          color: "white",
-                          padding: "5px 10px",
-                        }}
+                        onClick={() => handleSellClick(params.row.id)} // Pass the row ID here
+                        style={{ background: "orange", color: "white", padding: "5px 10px" }}
                       >
                         Sell
                       </button>
                       <div style={{ color: "blue" }}>
                         <EditIcon />
                       </div>
-                      <div
-                        style={{ color: "gray" }}
-                        onClick={() => handleDelete(params.row.id)}
-                      >
+                      <div style={{ color: "gray" }} onClick={() => handleDelete(params.row.id)}>
                         <DeleteIcon />
                       </div>
                     </div>
@@ -213,7 +214,7 @@ const Users = () => {
               onChange={handleInputChange}
             />
             <div>
-              <button onClick={handleSave}>Save</button>
+              <button className="btn" onClick={handleSave}>Sell</button>
               <button onClick={handleCloseModal}>Cancel</button>
             </div>
           </ModalContent>

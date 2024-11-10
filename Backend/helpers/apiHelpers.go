@@ -20,42 +20,43 @@ func (s *Server) InitializeRoutes() error {
 	// Create a new Gin router with default middleware
 	s.Router = gin.Default()
 
-	// Configure CORS middleware
-	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"*"} // Allow all origins
-	config.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"}
-	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
-	config.AllowCredentials = true
-	config.MaxAge = 12 * time.Hour
+	// Update CORS config
+	config := cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000"},                            // Allow base origin
+		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}, // Include OPTIONS for preflight
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}
 
-	// r.Use(cors.New(config))
+	// Apply CORS middleware before defining any routes
 	s.Router.Use(cors.New(config))
 
-	s.Router.POST("/shree-computer-shop/user-login/", func(c *gin.Context) {
+	s.Router.POST("/shree-computer-shop/user-login", func(c *gin.Context) {
 		s.UserLoginAPI(c)
 	})
-	s.Router.POST("/shree-computer-shop/add-product/", func(c *gin.Context) {
+	s.Router.POST("/shree-computer-shop/add-product", func(c *gin.Context) {
 		s.AddProduct(c)
 	})
-	s.Router.POST("/shree-computer-shop/sale-product/", func(c *gin.Context) {
+	s.Router.POST("/shree-computer-shop/sale-product", func(c *gin.Context) {
 		s.SellProduct(c)
 	})
-	s.Router.GET("/shree-computer-shop/available-products/", func(c *gin.Context) {
+	s.Router.POST("/shree-computer-shop/available-products", func(c *gin.Context) {
 		s.AvailableProducts(c)
 	})
-	s.Router.GET("/shree-computer-shop/fetch-sale-products/", func(c *gin.Context) {
+	s.Router.POST("/shree-computer-shop/fetch-sale-products", func(c *gin.Context) {
 		s.FetchSaleProducts(c)
 	})
-	s.Router.GET("/shree-computer-shop/add-product-history/", func(c *gin.Context) {
+	s.Router.POST("/shree-computer-shop/add-product-history", func(c *gin.Context) {
 		s.AddProductHistory(c)
 	})
-	s.Router.POST("/shree-computer-shop/delete-product/", func(c *gin.Context) {
+	s.Router.POST("/shree-computer-shop/delete-product", func(c *gin.Context) {
 		s.DeleteProduct(c)
 	})
-	s.Router.POST("/shree-computer-shop/fetch-data/", func(c *gin.Context) {
+	s.Router.POST("/shree-computer-shop/fetch-data", func(c *gin.Context) {
 		s.FetchDataGenericAPI(c)
 	})
-	s.Router.POST("/shree-computer-shop/fetch-product-names-or-brands/", func(c *gin.Context) {
+	s.Router.POST("/shree-computer-shop/fetch-product-names-or-brands", func(c *gin.Context) {
 		s.FetchProductNames(c)
 	})
 

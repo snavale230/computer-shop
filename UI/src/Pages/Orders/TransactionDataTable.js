@@ -14,13 +14,15 @@ const TransactionDataTable = ({ onRowClick, tableRows }) => {
   const theme = useTheme();
 
   const tableCellNamesForTransaction = [
-    "Tracking ID",
-    "Product",
-    "Customer",
-    "Date",
+    "ID",
+    "Name",
+    "Brand",
     "Price",
-    "Payment Method",
+    "Quantity",
     "Status",
+    "Added Date",
+    "Product Description",
+    "Supplier Name",
   ];
 
   return (
@@ -59,32 +61,30 @@ const TransactionDataTable = ({ onRowClick, tableRows }) => {
                   {row.id}{" "}
                 </TableCell>
                 <TableCell className="table_cell" sx={{ p: 1 }}>
-                  <div className="cell_wrapper">
-                    <img src={row.img} alt="Table" className="cell_img" />
-                    {row.product}
-                  </div>
+                    {row.product_name}
                 </TableCell>
                 <TableCell className="table_cell" sx={{ p: 1 }}>
-                  {row.customer}
+                  {row.product_brand}
                 </TableCell>
                 <TableCell className="table_cell" sx={{ p: 1 }}>
-                  {row.date}
+                  {row.product_price}
                 </TableCell>
                 <TableCell className="table_cell" sx={{ p: 1 }}>
-                  ${row.price}
+                  {row.product_quantity}
                 </TableCell>
                 <TableCell className="table_cell" sx={{ p: 1 }}>
-                  {row.method}
+                  {row.product_status}
                 </TableCell>
-                <TableCell sx={{ p: 1 }}>
-                  <span
-                    className={`status ${
-                      row.status && row.status.toLowerCase()
-                    }`}
-                  >
-                    {row.status}
-                  </span>
+                <TableCell className="table_cell" sx={{ p: 1 }}>
+                {new Date(row.date_added).toLocaleDateString('en-GB')}
                 </TableCell>
+                <TableCell className="table_cell" sx={{ p: 1 }}>
+                  {row.product_description}
+                </TableCell>
+                <TableCell className="table_cell" sx={{ p: 1 }}>
+                  {row.supplier_name}
+                </TableCell>
+                
               </TableRow>
             ))}
         </TableBody>

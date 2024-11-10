@@ -16,7 +16,7 @@ const AddProducts = () => {
   const [productName, setProductName] = useState("");
   const [price, setPrice] = useState("");
   const [brand, setBrand] = useState("");
-  const [model, setModel] = useState("");
+  const [status, setStatus] = useState("available");
   const [quantity, setQuantity] = useState("");
   const [supplierName, setSupplierName] = useState("");
   const [productDescription, setProductDescription] = useState("");
@@ -29,16 +29,16 @@ const AddProducts = () => {
     // Check if price and quantity are numbers and within allowed ranges
     const parsedPrice = parseFloat(price);
     const parsedQuantity = parseFloat(quantity);
-    if (isNaN(parsedPrice) || isNaN(parsedQuantity)) {
-      alert("Price and Quantity must be a number.");
-      return;
-    } else if (parsedPrice > 2000 || parsedQuantity > 20) {
-      alert("Price cannot exceed 2000, and Quantity cannot exceed 20.");
-      return;
-    }
+    // if (isNaN(parsedPrice) || isNaN(parsedQuantity)) {
+    //   alert("Price and Quantity must be a number.");
+    //   return;
+    // } else if (parsedPrice > 2000 || parsedQuantity > 20) {
+    //   alert("Price cannot exceed 2000, and Quantity cannot exceed 20.");
+    //   return;
+    // }
   
     // Check if all fields are filled in
-    if ( !productName || !price || !brand || !model || !quantity) {
+    if ( !productName || !price || !brand || !status || !quantity) {
       alert("Please fill in all fields");
       return;
     }
@@ -47,7 +47,7 @@ const AddProducts = () => {
     const payload = {
       productName: productName,
       productBrand: brand,
-      productStatus: model,
+      productStatus: status,
       productPrice: parsedPrice,
       productQuantity: parsedQuantity,
       productDescription: productDescription,
@@ -81,7 +81,7 @@ const AddProducts = () => {
       productName: productName.substring(0, 50),
       price: parsedPrice,
       brand: brand.substring(0, 20),
-      model: model.substring(0, 20),
+      status: status.substring(0, 20),
       quantity: parsedQuantity,
 
     };
@@ -90,7 +90,7 @@ const AddProducts = () => {
     setProductName("");
     setPrice("");
     setBrand("");
-    setModel("");
+    setStatus("");
     setQuantity("");
     setSupplierName("");
     setProductDescription("");
@@ -162,7 +162,7 @@ const AddProducts = () => {
                           type="text"
                           value={price}
                           inputMode="numeric"
-                          placeholder="2000 max (in USD)"
+                          placeholder="price"
                           onChange={(e) => setPrice(e.target.value)}
                         />
                       </div>
@@ -180,10 +180,11 @@ const AddProducts = () => {
                         <label>Product Status</label>
                         <input
                           type="text"
-                          value={model}
+                          value={status}
                           placeholder="Available/Not Available"
-                          onChange={(e) => setModel(e.target.value)}
+                          onChange={(e) => setStatus(e.target.value)}
                           maxLength={20}
+                          disabled
                         />
                       </div>
                       <div className="form_input">
@@ -192,7 +193,7 @@ const AddProducts = () => {
                           value={quantity}
                           type="text"
                           inputMode="numeric"
-                          placeholder="20 max"
+                          placeholder="quantity"
                           onChange={(e) => setQuantity(e.target.value)}
                         />
                       </div>
@@ -221,7 +222,7 @@ const AddProducts = () => {
               </div>
             </div>
             <div className="item_list_div">
-              {productRows.length > 0 && (
+              {productRows.length > 0 && ( 
                 <>
                   <h6 className="px-2 mb-0 mt-2">List of products</h6>
                   <ListInTable

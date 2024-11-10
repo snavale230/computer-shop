@@ -6,19 +6,19 @@ export const productListTableColumns = [
     headerClassName: "custom_header",
     width: 100,
   },
-  {
-    field: "productImg",
-    headerName: "Image",
-    headerClassName: "custom_header",
-    width: 100,
-    renderCell: (params) => {
-      return (
-        <div className="cell_img_div">
-          <img className="cell_img" src={params.row.productImg} alt="avatar" />
-        </div>
-      );
-    },
-  },
+  // {
+  //   field: "productImg",
+  //   headerName: "Image",
+  //   headerClassName: "custom_header",
+  //   width: 100,
+  //   renderCell: (params) => {
+  //     return (
+  //       <div className="cell_img_div">
+  //         <img className="cell_img" src={params.row.productImg} alt="avatar" />
+  //       </div>
+  //     );
+  //   },
+  // },
   {
     field: "productName",
     headerName: "Product",
@@ -39,14 +39,20 @@ export const productListTableColumns = [
   },
 
   {
-    field: "model",
-    headerName: "Model",
+    field: "status",
+    headerName: "Status",
     headerClassName: "custom_header",
     width: 100,
   },
   {
     field: "quantity",
     headerName: "Quantity",
+    headerClassName: "custom_header",
+    width: 70,
+  },
+  {
+    field: "productDescription",
+    headerName: "Product Description",
     headerClassName: "custom_header",
     width: 70,
   },

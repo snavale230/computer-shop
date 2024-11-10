@@ -2,9 +2,9 @@ import React, { useEffect, useContext } from "react";
 import { ThemeContext, LoaderContext } from "../../App";
 import { motion } from "framer-motion";
 import TransactionDataTable from "../Orders/TransactionDataTable";
-import { transactionTableData } from "../../MockData/TransactionData";
+// import { transactionTableData } from "../../MockData/TransactionData";
 import { data } from "../../MockData/ChartData";
-
+import Orders from "../Orders/Orders";
 import Loader from "../../Components/Loader/Loader";
 import Sidebar from "../../layout/Sidebar/Sidebar";
 import Navbar from "../../layout/Navbar/Navbar";
@@ -77,10 +77,10 @@ const Home = () => {
                 <div className="summary_cards_container">
                   <SummaryCards />
                 </div>
-                <div className="lists_container">
+                {/* <div className="lists_container">
                   <h4 className="p-2">Latest Tranaction</h4>
-                  <TransactionDataTable tableRows={transactionTableData} />
-                </div>
+                  <Orders/>
+                </div> */}
               </div>
             </main>
           </motion.div>
