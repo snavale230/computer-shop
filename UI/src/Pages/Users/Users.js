@@ -64,6 +64,7 @@ const Users = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+          // const response = await fetchAllProductsAPI();
         // Mocked response data
         let response = {
           availableProductList: [
