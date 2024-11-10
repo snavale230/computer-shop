@@ -1,22 +1,25 @@
 import axios from "axios";
-// const domainURL = "https://dev-arthaleap.cloudjiffy.net";
-const domainURL = "";
+const domainURL = "http://localhost:1421";
+// const domainURL = "";
 
-const loginAPI = async ( requestBody ) => {
+const loginAPI = async (requestBody) => {
     try {
-
-        const response = await axios.post( domainURL + "/shree-computer-shop/user-login",
-            requestBody,
-            {
-                withCredentials: true
-            }
-        );
-
-        return response;
-    } catch ( error ) {
-        throw error;
+      const response = await axios.post(
+        "http://localhost:1421/shree-computer-shop/user-login/",
+        requestBody,
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true,
+        }
+      );
+ 
+      return response.data;
+    } catch (error) {
+      throw error;
     }
-};
+  };
 
 const addProductAPI = async ( requestBody ) => {
     try {
@@ -34,44 +37,10 @@ const addProductAPI = async ( requestBody ) => {
     }
 };
 
-const existingSessionApplyAPI = async ( requestBody ) => {
+const fetchAllProductsAPI = async () => {
     try {
 
-        const response = await axios.post( domainURL + "/personal-loan/checking-existing-application",
-            requestBody,
-            {
-                withCredentials: true
-            }
-        );
-
-        return response;
-    } catch ( error ) {
-        throw error;
-    }
-};
-
-const verifyOtpAPI = async ( requestBody ) => {
-    try {
-
-        const response = await axios.post( domainURL +
-            "/authn/val",
-            JSON.stringify( requestBody ),
-            {
-                withCredentials: true,
-            }
-        );
-
-        return response;
-    } catch ( error ) {
-        throw error;
-    }
-};
-
-
-const fetchAllLoanApplicationsAPI = async () => {
-    try {
-
-        const response = await axios.get( domainURL + '/personal-loan/all-loan-applications', {
+        const response = await axios.get( domainURL + '/shree-computer-shop/available-products', {
             withCredentials: true,
         } );
         return response;
@@ -1423,4 +1392,4 @@ const businessLoanStoreBusinessIncomeDetails = async ( requestBody ) => {
     }
 };
 
-export {businessLoanStoreBusinessIncomeDetails,existingSessionApplyAPI,businessLoanFetchBusinessIncomeDetails,fetchDataBusinessAPI,businessLoanSanctionLetterAndMitcGenerationAPI,businessLoanLoanOffersInfo,businessLoanAcceptedLoanOfferAPI,businessLoanIntegrationApi,businessLoanBankStatementAnalysisAPI,businessLoanGetBankStatementAPI,verifyUdyamNumber,businessLoanStoreGstrAPI,verifyGSTN,skipBankAccountVerification,bankStatementAPI,getBankStatementAPI,fetchItrDetailsAPI,storeItrAPI,routeBankOrAccountStatementAPI,storeProfessionalDetailsAPI,fetchDataAPI,fetchProfessionalDetailsAPI,buisnessLoanFetchReferncesAPI,businessLoanFetchDataAPI,businessLoanFetchItrDetailsAPI,businessLoanFetchGstrDetailsAPI,businessLoanStoreItrAPI,businessLoanStoreReferncesAPI,businessLoanEmailOtpValidation,businessLoanEmailVerification,businessLoanVerifyGSTN,businessLoanStoreProfessionalDetailsAPI,businessLoanFetchProfessionalDetailsAPI,businessLoanGetImageMapAPI,businessLoanImageMatchAPI,businessLoanCibilAPI,businessLoanValidateUAN,businessLoanFetchAddressVintageAPI,businessLoanStoreAddressDetailsAPI,businessLoanFetchAddressAPI,businessLoanAadhaarOtpValidationAPI,businessLoanInitiateKycAutoAPI,businessLoanStoreDecisionEngine1DetailsAPI,businessLoanDecisionEngine1API,businessLoanPreDe1CallAPI,businessLoanUpdatePersonalDetailsAPI,businessLoanUdyamVerificationAPI,businessLoanUserDetailsAPI,businessLoanCreateLoanApplicationAPI, emailOTPValidationAPI, emailVerificationAPI, accountAggregatorAPI, signOut, integrationApi, skipEnachAPI, skipAisAPI, fetchDistStateAPI, emsignerEsignAPI, getLoanDocketAPI, loanDocketCreationAPI, check_eNachStatusAPI, initiateENachApi, enachGetDetailsAPI, bankaccountVerificationCallAPI, accountDetailsGetAPI, vkycSkipAPI, vkycFetchUrlAPI, getDocumentDataByDocumentIdAPI, sanctionLetterMitcInfoAPI, sanctionLetterAndMitcGenerationAPI, acceptedLoanOfferAPI, loanOffersInfo, bankStatementAnalysisAPI, getBankNamesForUiAPI, aadhaarOtpValidationAPI, initiateKycAutoAPI, storeEmployeeHistoryAPI, getEmployeeHistory, uploadAisReport, validateUAN, cibilAPI, imageMatchAPI, getImageMapAPI, fetchAddressVintageAPI, storeAddressDetailsAPI, addProductAPI,loginAPI, verifyOtpAPI, createLoanApplicationAPI,fetchAllLoanApplicationsAPI, userDetailsAPI, updatePersonalDetailsAPI, decisionEngine1API, preDe1CallAPI, storeDecisionEngine1DetailsAPI, fetchAddressAPI };
+export {fetchAllProductsAPI,businessLoanFetchBusinessIncomeDetails,fetchDataBusinessAPI,businessLoanSanctionLetterAndMitcGenerationAPI,businessLoanLoanOffersInfo,businessLoanAcceptedLoanOfferAPI,businessLoanIntegrationApi,businessLoanBankStatementAnalysisAPI,businessLoanGetBankStatementAPI,verifyUdyamNumber,businessLoanStoreGstrAPI,verifyGSTN,skipBankAccountVerification,bankStatementAPI,getBankStatementAPI,fetchItrDetailsAPI,storeItrAPI,routeBankOrAccountStatementAPI,storeProfessionalDetailsAPI,fetchDataAPI,fetchProfessionalDetailsAPI,buisnessLoanFetchReferncesAPI,businessLoanFetchDataAPI,businessLoanFetchItrDetailsAPI,businessLoanFetchGstrDetailsAPI,businessLoanStoreItrAPI,businessLoanStoreReferncesAPI,businessLoanEmailOtpValidation,businessLoanEmailVerification,businessLoanVerifyGSTN,businessLoanStoreProfessionalDetailsAPI,businessLoanFetchProfessionalDetailsAPI,businessLoanGetImageMapAPI,businessLoanImageMatchAPI,businessLoanCibilAPI,businessLoanValidateUAN,businessLoanFetchAddressVintageAPI,businessLoanStoreAddressDetailsAPI,businessLoanFetchAddressAPI,businessLoanAadhaarOtpValidationAPI,businessLoanInitiateKycAutoAPI,businessLoanStoreDecisionEngine1DetailsAPI,businessLoanDecisionEngine1API,businessLoanPreDe1CallAPI,businessLoanUpdatePersonalDetailsAPI,businessLoanUdyamVerificationAPI,businessLoanUserDetailsAPI,businessLoanCreateLoanApplicationAPI, emailOTPValidationAPI, emailVerificationAPI, accountAggregatorAPI, signOut, integrationApi, skipEnachAPI, skipAisAPI, fetchDistStateAPI, emsignerEsignAPI, getLoanDocketAPI, loanDocketCreationAPI, check_eNachStatusAPI, initiateENachApi, enachGetDetailsAPI, bankaccountVerificationCallAPI, accountDetailsGetAPI, vkycSkipAPI, vkycFetchUrlAPI, getDocumentDataByDocumentIdAPI, sanctionLetterMitcInfoAPI, sanctionLetterAndMitcGenerationAPI, acceptedLoanOfferAPI, loanOffersInfo, bankStatementAnalysisAPI, getBankNamesForUiAPI, aadhaarOtpValidationAPI, initiateKycAutoAPI, storeEmployeeHistoryAPI, getEmployeeHistory, uploadAisReport, validateUAN, cibilAPI, imageMatchAPI, getImageMapAPI, fetchAddressVintageAPI, storeAddressDetailsAPI, addProductAPI,loginAPI,createLoanApplicationAPI,userDetailsAPI, updatePersonalDetailsAPI, decisionEngine1API, preDe1CallAPI, storeDecisionEngine1DetailsAPI, fetchAddressAPI };

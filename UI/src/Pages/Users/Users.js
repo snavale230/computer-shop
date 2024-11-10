@@ -7,12 +7,16 @@ import Sidebar from "../../layout/Sidebar/Sidebar";
 import Navbar from "../../layout/Navbar/Navbar";
 import ListInTable from "../../Components/DataTable/DataTable";
 import "../../App.sass";
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { fetchAllProductsAPI } from "../../Components/ActionCreator/ActionCreator";
 
 const Users = () => {
   const [rows, setRows] = useState(userRows);
   const { userName } = useContext(ProfileContext);
+  const navigate = useNavigate();
 
   function handleDelete(id) {
     setRows(rows.filter((row) => row.id !== id));
@@ -29,18 +33,20 @@ const Users = () => {
           <div className="cell_action_div">
             <Link
               to="/users"
-              style={{ textDecoration: "none", color: "unset" , background:'orange' }}
+              style={{
+                textDecoration: "none",
+                color: "unset",
+                background: "orange",
+              }}
               className="view_btn"
             >
               Sell
             </Link>
-            <div
-              style={{color:'blue'}}
-            >
+            <div style={{ color: "blue" }}>
               <EditIcon />
             </div>
             <div
-              style={{color:'gray'}}
+              style={{ color: "gray" }}
               onClick={() => handleDelete(params.row.id)}
             >
               <DeleteIcon />
@@ -54,6 +60,71 @@ const Users = () => {
   useEffect(() => {
     document.title = "Users | Admin Dashboard";
   });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // const response = await fetchAllProductsAPI();
+        let response = {
+          availableProductList: [
+            {
+              category: null,
+              date_added: "2024-06-15T23:17:01.756211Z",
+              last_updated: "2024-06-23T23:05:36.553064Z",
+              product_brand: "DELL",
+              product_description: "Mouse Added",
+              product_id: "PI1",
+              product_name: "Mounse",
+              product_price: "500.00",
+              product_quantity: 3,
+              product_status: "available",
+              supplier_contact: null,
+              supplier_name: "Sharad Kasar",
+            },
+            {
+              category: null,
+              date_added: "2024-06-15T23:19:07.095058Z",
+              last_updated: "2024-06-23T23:05:36.553064Z",
+              product_brand: "HP1",
+              product_description: "Mouse Added",
+              product_id: "PI2",
+              product_name: "Mounse",
+              product_price: "500.00",
+              product_quantity: 3,
+              product_status: "available",
+              supplier_contact: null,
+              supplier_name: "Sharad Kasar",
+            },
+          ],
+          businessStatusCode: 2,
+          httpResponseCode: 200,
+        };
+        if (response.status === 200 && response.data.businessStatusCode === 2) {
+          setRows();
+        } else {
+          toast.error(response.data.message);
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 401) {
+          toast.error(
+            "Your Session has expired. You will be redirected to Login Page."
+          );
+          navigate("/");
+        } else if (error.response && error.response.status === 429) {
+          toast.error(
+            "Too Many Requests: You have exceeded the rate limit. Please try again later."
+          );
+        } else {
+          toast.error(
+            "There appears to be a technical issue connecting to our servers. Could you please try again later."
+          );
+        }
+        console.error("Error fetching loan data:", error);
+      }
+    };
+
+    fetchData();
+  }, []); // Add dependencies as needed
 
   return (
     <>
