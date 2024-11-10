@@ -14,12 +14,12 @@ import { useNavigate } from "react-router-dom";
 import { fetchAllProductsAPI } from "../../Components/ActionCreator/ActionCreator";
 
 const Users = () => {
-  const [rows, setRows] = useState(userRows);
+  const [rows, setRows] = useState([]); // Initialize rows as an empty array
   const { userName } = useContext(ProfileContext);
   const navigate = useNavigate();
 
   function handleDelete(id) {
-    setRows(rows.filter((row) => row.id !== id));
+    setRows((prevRows) => prevRows.filter((row) => row.id !== id)); // Update rows based on previous state
   }
 
   const actionColumn = [
@@ -59,12 +59,12 @@ const Users = () => {
 
   useEffect(() => {
     document.title = "Users | Admin Dashboard";
-  });
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // const response = await fetchAllProductsAPI();
+        // Mocked response data
         let response = {
           availableProductList: [
             {
@@ -73,7 +73,7 @@ const Users = () => {
               last_updated: "2024-06-23T23:05:36.553064Z",
               product_brand: "DELL",
               product_description: "Mouse Added",
-              product_id: "PI1",
+              product_id: "PI1", // product_id will be used as the unique ID
               product_name: "Mounse",
               product_price: "500.00",
               product_quantity: 3,
@@ -87,7 +87,7 @@ const Users = () => {
               last_updated: "2024-06-23T23:05:36.553064Z",
               product_brand: "HP1",
               product_description: "Mouse Added",
-              product_id: "PI2",
+              product_id: "PI2", // product_id will be used as the unique ID
               product_name: "Mounse",
               product_price: "500.00",
               product_quantity: 3,
@@ -99,32 +99,33 @@ const Users = () => {
           businessStatusCode: 2,
           httpResponseCode: 200,
         };
-        if (response.status === 200 && response.data.businessStatusCode === 2) {
-          setRows();
+  
+        // Adding the `id` field to each row based on `product_id`
+        if (response.httpResponseCode === 200 && response.businessStatusCode === 2) {
+          const rowsWithId = response.availableProductList.map((item) => ({
+            ...item,
+            id: item.product_id, // Adding id based on product_id
+          }));
+          setRows(rowsWithId);
         } else {
-          toast.error(response.data.message);
+          toast.error("Error fetching data.");
         }
       } catch (error) {
         if (error.response && error.response.status === 401) {
-          toast.error(
-            "Your Session has expired. You will be redirected to Login Page."
-          );
+          toast.error("Your Session has expired. You will be redirected to Login Page.");
           navigate("/");
         } else if (error.response && error.response.status === 429) {
-          toast.error(
-            "Too Many Requests: You have exceeded the rate limit. Please try again later."
-          );
+          toast.error("Too Many Requests: You have exceeded the rate limit. Please try again later.");
         } else {
-          toast.error(
-            "There appears to be a technical issue connecting to our servers. Could you please try again later."
-          );
+          toast.error("There appears to be a technical issue connecting to our servers. Could you please try again later.");
         }
         console.error("Error fetching loan data:", error);
       }
     };
-
+  
     fetchData();
-  }, []); // Add dependencies as needed
+  }, [navigate]); // Added navigate as a dependency
+  
 
   return (
     <>
@@ -150,6 +151,7 @@ const Users = () => {
               rows={rows}
               columns={userColumns.concat(actionColumn)}
               height={680}
+              getRowId={(row) => row.product_id} 
             />
           </UserTable>
         </div>
