@@ -4,8 +4,8 @@ const domainURL = "http://localhost:1421";
 
 const loginAPI = async (requestBody) => {
   try {
-    const response = await axios.post(
-      "http://localhost:1421/shree-computer-shop/user-login",
+    const response = await axios.post(domainURL+
+      "/shree-computer-shop/user-login",
       requestBody,
       {
         headers: {
@@ -23,9 +23,12 @@ const loginAPI = async (requestBody) => {
 
 const addProductAPI = async (requestBody) => {
   try {
-    const response = await axios.post( "http://localhost:1421/shree-computer-shop/add-product",
+    const response = await axios.post(domainURL + "/shree-computer-shop/add-product",
       requestBody,
       {
+        headers: {
+          "Content-Type": "application/json",
+        },
         withCredentials: true,
       }
     );
@@ -41,6 +44,9 @@ const fetchAllProductsAPI = async () => {
     const response = await axios.post(
       domainURL + "/shree-computer-shop/available-products",
       {
+        headers: {
+          "Content-Type": "application/json",
+        },
         withCredentials: true,
       }
     );
@@ -53,9 +59,12 @@ const fetchAllProductsAPI = async () => {
 const sellProductAPI = async (requestBody) => {
     try {
       const response = await axios.post(
-        domainURL + "/shree-computer-shop/sale-product",
+        domainURL + "/shree-computer-shop/sell-product",
         requestBody,
         {
+          headers: {
+            "Content-Type": "application/json",
+          },
           withCredentials: true,
         }
       );
@@ -69,9 +78,12 @@ const sellProductAPI = async (requestBody) => {
   const sellProductHistoryAPI = async (requestBody) => {
     try {
       const response = await axios.post(
-        domainURL + "/shree-computer-shop/fetch-sale-products",
+        domainURL + "/shree-computer-shop/fetch-sell-products",
         requestBody,
         {
+          headers: {
+            "Content-Type": "application/json",
+          },
           withCredentials: true,
         }
       );
@@ -88,6 +100,9 @@ const sellProductAPI = async (requestBody) => {
         domainURL + "/shree-computer-shop/add-product-history",
         requestBody,
         {
+          headers: {
+            "Content-Type": "application/json",
+          },
           withCredentials: true,
         }
       );
@@ -104,6 +119,9 @@ const sellProductAPI = async (requestBody) => {
         domainURL + "/shree-computer-shop/delete-product",
         requestBody,
         {
+          headers: {
+            "Content-Type": "application/json",
+          },
           withCredentials: true,
         }
       );

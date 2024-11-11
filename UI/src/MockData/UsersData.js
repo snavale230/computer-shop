@@ -13,12 +13,12 @@ export const userColumns = [
     headerClassName: "custom_header",
     width: 90,
   },
-  {
-    field: "category",
-    headerName: "Category",
-    headerClassName: "custom_header",
-    width: 70,
-  },
+  // {
+  //   field: "category",
+  //   headerName: "Category",
+  //   headerClassName: "custom_header",
+  //   width: 70,
+  // },
   {
     field: "product_brand",
     headerName: "Brand",
@@ -50,12 +50,12 @@ export const userColumns = [
     headerClassName: "custom_header",
     width: 120,
   },
-  {
-    field: "supplier_contact",
-    headerName: "Contact",
-    headerClassName: "custom_header",
-    width: 80,
-  },
+  // {
+  //   field: "supplier_contact",
+  //   headerName: "Contact",
+  //   headerClassName: "custom_header",
+  //   width: 80,
+  // },
   {
     field: "date_added",
     headerName: "Added Date",

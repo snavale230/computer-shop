@@ -8,7 +8,7 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-func (s *Server) FetchSaleProducts(c *gin.Context) {
+func (s *Server) FetchSellProducts(c *gin.Context) {
 	log.Debug().Msg("Connecting to database")
 	// Open a connection to the database
 	db, err := sqlx.Open("postgres", Dsn)
@@ -58,7 +58,7 @@ func (s *Server) FetchSaleProducts(c *gin.Context) {
 	}
 
 	c.AbortWithStatusJSON(Ok, gin.H{
-		"saleProductList":    viewListData,
+		"sellProductList":    viewListData,
 		"httpResponseCode":   Ok,
 		"businessStatusCode": BusinessSuccess,
 	})

@@ -25,7 +25,7 @@ func (s *Server) SellProduct(c *gin.Context) {
 		return
 	}
 	if SellProductInput.ProductQuantity == 0 {
-		ReturnAPITechnicalError(c, BadRequest, fmt.Errorf("sale quantity is not found"), "Please provide a correct request. The sale quantity is 0.")
+		ReturnAPITechnicalError(c, BadRequest, fmt.Errorf("sell quantity is not found"), "Please provide a correct request. The sell quantity is 0.")
 		return
 	}
 	if SellProductInput.ProductId == "" {
@@ -33,7 +33,7 @@ func (s *Server) SellProduct(c *gin.Context) {
 		return
 	}
 	if SellProductInput.ProductPrice == 0 {
-		ReturnAPITechnicalError(c, BadRequest, fmt.Errorf("sale price is not found"), "Please provide a correct request. The sale price is 0.")
+		ReturnAPITechnicalError(c, BadRequest, fmt.Errorf("sell price is not found"), "Please provide a correct request. The sell price is 0.")
 		return
 	}
 	if SellProductInput.CustomerName == "" {
@@ -78,33 +78,42 @@ func (s *Server) SellProduct(c *gin.Context) {
 		return
 	}
 
-	availableQuantity := quantity.Float64 - float64(SellProductInput.ProductQuantity)
-	if availableQuantity == 0 {
-		query := `UPDATE products SET product_status = 'sold', product_quantity = null WHERE product_id = $1`
-		_, err = db.Exec(query, SellProductInput.ProductId)
-		if err != nil {
-			ReturnAPITechnicalError(c, InternalServerError, err, "could not execute query in products table")
+	if quantity.Float64 >= float64(SellProductInput.ProductQuantity) {
+		availableQuantity := quantity.Float64 - float64(SellProductInput.ProductQuantity)
+		if availableQuantity == 0 {
+			query := `UPDATE products SET product_status = 'sold', product_quantity = null WHERE product_id = $1`
+			_, err = db.Exec(query, SellProductInput.ProductId)
+			if err != nil {
+				ReturnAPITechnicalError(c, InternalServerError, err, "could not execute query in products table")
 
+			}
+		} else {
+			query := `UPDATE products SET product_status = 'available', product_quantity = $1 WHERE product_id = $2`
+			_, err = db.Exec(query, availableQuantity, SellProductInput.ProductId)
+			if err != nil {
+				ReturnAPITechnicalError(c, InternalServerError, err, "could not execute query in products table")
+				return
+			}
 		}
-	} else {
-		query := `UPDATE products SET product_status = 'sold', product_quantity = $1 WHERE product_id = $2`
-		_, err = db.Exec(query, availableQuantity, SellProductInput.ProductId)
+		var saleId string
+		err = db.QueryRow(`INSERT INTO sales (product_id, sale_quantity, sale_price, customer_name, customer_mobile, description) VALUES ($1, $2, $3, $4, $5, $6) RETURNING sale_id`, SellProductInput.ProductId, SellProductInput.ProductQuantity, SellProductInput.ProductPrice, SellProductInput.CustomerName, customerMobile, description).Scan(&saleId)
 		if err != nil {
-			ReturnAPITechnicalError(c, InternalServerError, err, "could not execute query in products table")
+			ReturnAPITechnicalError(c, InternalServerError, err, "Error inserting data into the sales table")
 			return
 		}
-	}
 
-	var saleId string
-	err = db.QueryRow(`INSERT INTO sales (product_id, sale_quantity, sale_price, customer_name, customer_mobile, description) VALUES ($1, $2, $3, $4, $5, $6) RETURNING sale_id`, SellProductInput.ProductId, SellProductInput.ProductQuantity, SellProductInput.ProductPrice, SellProductInput.CustomerName, customerMobile, description).Scan(&saleId)
-	if err != nil {
-		ReturnAPITechnicalError(c, InternalServerError, err, "Error inserting data into the sales table")
+		c.AbortWithStatusJSON(Ok, gin.H{
+			"message":            fmt.Sprintf("Sell Id: %v, Product Id: %v This Product is selled!", saleId, SellProductInput.ProductId),
+			"httpResponseCode":   Ok,
+			"businessStatusCode": BusinessSuccess,
+		})
+		return
+	} else {
+		c.AbortWithStatusJSON(Ok, gin.H{
+			"message":            fmt.Sprintf("Insufficient stock: only %v units available, but %v units requested.", quantity.Float64, SellProductInput.ProductQuantity),
+			"httpResponseCode":   Ok,
+			"businessStatusCode": BusinessFailure,
+		})
 		return
 	}
-
-	c.AbortWithStatusJSON(Ok, gin.H{
-		"message":            fmt.Sprintf("Sale Id: %v, Product Id: %v This Product is saled!", saleId, SellProductInput.ProductId),
-		"httpResponseCode":   Ok,
-		"businessStatusCode": BusinessSuccess,
-	})
 }

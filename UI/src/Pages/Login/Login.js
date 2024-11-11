@@ -25,10 +25,7 @@ const Login = (props) => {
   };
 
   const handleLogin = async (e) => {
-    navigate("/home");
-    e.preventDefault();
-    localStorage.removeItem("timerStartTime");
-
+  
     const requestBody = {
       mobile: userName,
       password: password
@@ -36,10 +33,10 @@ const Login = (props) => {
 
     try {
       const response = await loginAPI(requestBody);
-      if (response.status === 200 && response.data.businessStatusCode === 2) {
-        
+      if ( response.businessStatusCode === 2) {
+        navigate("/home");
       } else {
-        toast.error(response.data.message);
+        toast.error(response.message);
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -86,9 +83,8 @@ const Login = (props) => {
             <label htmlFor="password">Password</label>
             <input
               className="form-control"
-              type="password"
+              type="text"
               id="password"
-              maxLength={10}
               value={password}
               onChange={handlePasswordChange}
               required

@@ -20,7 +20,6 @@ import {
       "Sell Price",
       "Sell Quantity",
       "Sell Date",
-      "Description",
     ];
   
     return (
@@ -73,9 +72,6 @@ import {
                   <TableCell className="table_cell" sx={{ p: 1 }}>
                   {new Date(row.sale_date).toLocaleDateString('en-GB')}
                   </TableCell>
-                  <TableCell className="table_cell" sx={{ p: 1 }}>
-                    {row.description}
-                  </TableCell> 
                 </TableRow>
               ))}
           </TableBody>

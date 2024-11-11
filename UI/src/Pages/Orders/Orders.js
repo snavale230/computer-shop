@@ -34,7 +34,7 @@ const Orders = () => {
         setSelectedRowId(rowsWithId);
       } else if (tab === "sales") {
         const response = await sellProductHistoryAPI();
-        const rowsWithId = response.data.saleProductList.map((item) => ({
+        const rowsWithId = response.data.sellProductList.map((item) => ({
           ...item,
           id: item.product_id,
         }));

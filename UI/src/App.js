@@ -54,7 +54,7 @@ function App() {
   useEffect(() => {
     // Retrieve the values from local storage and set them to component state
     const storedUserName = localStorage.getItem("userName");
-    setUserName(storedUserName ? storedUserName : "Sachin005");
+    setUserName(storedUserName ? storedUserName : "Vijay Nagane");
 
     const storedProfilePic = localStorage.getItem("profilePic");
     if (storedProfilePic) {

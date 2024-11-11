@@ -229,7 +229,7 @@ const Sidebar = () => {
           </div>
           <div className="bottom_profile_admin_info">
             <h6 className="mb-0">{userName}</h6>
-            <p className="mb-0">Hero Admin</p>
+            <p className="mb-0"> Admin</p>
           </div>
           <div className="bottom_profile_logout" onClick={handleLogout}>
             <ExitToAppIcon style={{ cursor: "pointer" }} />
@@ -246,7 +246,7 @@ const Sidebar = () => {
                 No
               </button>
               <Link
-                to="/logout"
+                to="/"
                 style={{ textDecoration: "none", color: "unset" }}
               >
                 <button className="btn btn-danger logout_no_btn rounded-0">

@@ -94,7 +94,7 @@ func (s *Server) AddProduct(c *gin.Context) {
 
 	if AddProductInput.ProductStatus == "available" {
 		c.AbortWithStatusJSON(Ok, gin.H{
-			"message":            fmt.Sprintf("Product Id : %v, %v-%v This Product is available for sale!", productId, AddProductInput.ProductBrand, AddProductInput.ProductName),
+			"message":            fmt.Sprintf("Product Id : %v, %v-%v This Product is available for sell!", productId, AddProductInput.ProductBrand, AddProductInput.ProductName),
 			"httpResponseCode":   Ok,
 			"businessStatusCode": BusinessSuccess,
 		})

@@ -8,7 +8,7 @@ const Logout = () => {
   useEffect(() => {
     localStorage.removeItem("userName");
     localStorage.removeItem("profilePic");
-    navigate("/logout");
+    navigate("/");
     document.title = "Logout | Admin Dashboard";
   }, [navigate]);
 

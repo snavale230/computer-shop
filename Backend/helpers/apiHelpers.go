@@ -38,14 +38,14 @@ func (s *Server) InitializeRoutes() error {
 	s.Router.POST("/shree-computer-shop/add-product", func(c *gin.Context) {
 		s.AddProduct(c)
 	})
-	s.Router.POST("/shree-computer-shop/sale-product", func(c *gin.Context) {
+	s.Router.POST("/shree-computer-shop/sell-product", func(c *gin.Context) {
 		s.SellProduct(c)
 	})
 	s.Router.POST("/shree-computer-shop/available-products", func(c *gin.Context) {
 		s.AvailableProducts(c)
 	})
-	s.Router.POST("/shree-computer-shop/fetch-sale-products", func(c *gin.Context) {
-		s.FetchSaleProducts(c)
+	s.Router.POST("/shree-computer-shop/fetch-sell-products", func(c *gin.Context) {
+		s.FetchSellProducts(c)
 	})
 	s.Router.POST("/shree-computer-shop/add-product-history", func(c *gin.Context) {
 		s.AddProductHistory(c)
