@@ -12,12 +12,13 @@ import (
 
 func (s *Server) SellProduct(c *gin.Context) {
 	var SellProductInput struct {
-		ProductQuantity int     `json:"productQuantity"`
-		ProductId       string  `json:"productId"`
-		ProductPrice    float64 `json:"productPrice"`
+		ProductQuantity int     `json:"productQuantity" binding:"required"`
+		ProductId       string  `json:"productId" binding:"required"`
+		ProductPrice    float64 `json:"productPrice" binding:"required"`
 		CustomerMobile  string  `json:"customerMobile"`
-		CustomerName    string  `json:"customerName"`
+		CustomerName    string  `json:"customerName" binding:"required"`
 		Description     string  `json:"description"`
+		SerialNo        string  `json:"serialNo" binding:"required"`
 	}
 
 	if err := c.ShouldBindJSON(&SellProductInput); err != nil {
@@ -78,27 +79,49 @@ func (s *Server) SellProduct(c *gin.Context) {
 		return
 	}
 
-	availableQuantity := quantity.Float64 - float64(SellProductInput.ProductQuantity)
-	if availableQuantity == 0 {
-		query := `UPDATE products SET product_status = 'sold', product_quantity = null WHERE product_id = $1`
-		_, err = db.Exec(query, SellProductInput.ProductId)
+	if quantity.Float64 >= float64(SellProductInput.ProductQuantity) {
+		availableQuantity := quantity.Float64 - float64(SellProductInput.ProductQuantity)
+		if availableQuantity == 0 {
+			query := `UPDATE products SET product_status = 'sold', product_quantity = null WHERE product_id = $1`
+			_, err = db.Exec(query, SellProductInput.ProductId)
+			if err != nil {
+				ReturnAPITechnicalError(c, InternalServerError, err, "could not execute query in products table")
+
+			}
+		} else {
+			query := `UPDATE products SET product_status = 'available', product_quantity = $1 WHERE product_id = $2`
+			_, err = db.Exec(query, availableQuantity, SellProductInput.ProductId)
+			if err != nil {
+				ReturnAPITechnicalError(c, InternalServerError, err, "could not execute query in products table")
+				return
+			}
+		}
+		var saleId string
+		err = db.QueryRow(`INSERT INTO sales (product_id, sale_quantity, sale_price, customer_name, customer_mobile, description, serial_no) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING sale_id`, SellProductInput.ProductId, SellProductInput.ProductQuantity, SellProductInput.ProductPrice, SellProductInput.CustomerName, customerMobile, description, SellProductInput.SerialNo).Scan(&saleId)
 		if err != nil {
 			ReturnAPITechnicalError(c, InternalServerError, err, "could not execute query in products table")
 
 		}
-	} else {
-		query := `UPDATE products SET product_status = 'sold', product_quantity = $1 WHERE product_id = $2`
-		_, err = db.Exec(query, availableQuantity, SellProductInput.ProductId)
-		if err != nil {
-			ReturnAPITechnicalError(c, InternalServerError, err, "could not execute query in products table")
-			return
-		}
+
+		c.AbortWithStatusJSON(Ok, gin.H{
+			"message":            fmt.Sprintf("Sale Id: %v, Product Id: %v This Product is saled!", saleId, SellProductInput.ProductId),
+			"httpResponseCode":   Ok,
+			"businessStatusCode": BusinessSuccess,
+		})
+		return
+	}
+
+	query = `UPDATE products SET product_status = 'sold', product_quantity = $1 WHERE product_id = $2`
+	_, err = db.Exec(query, nil, SellProductInput.ProductId)
+	if err != nil {
+		ReturnAPITechnicalError(c, InternalServerError, err, "could not execute query in products table")
+		return
 	}
 
 	var saleId string
-	err = db.QueryRow(`INSERT INTO sales (product_id, sale_quantity, sale_price, customer_name, customer_mobile, description) VALUES ($1, $2, $3, $4, $5, $6) RETURNING sale_id`, SellProductInput.ProductId, SellProductInput.ProductQuantity, SellProductInput.ProductPrice, SellProductInput.CustomerName, customerMobile, description).Scan(&saleId)
+	err = db.QueryRow(`INSERT INTO sales (product_id, sale_quantity, sale_price, customer_name, customer_mobile, description, serial_no) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING sale_id`, SellProductInput.ProductId, SellProductInput.ProductQuantity, SellProductInput.ProductPrice, SellProductInput.CustomerName, customerMobile, description, SellProductInput.SerialNo).Scan(&saleId)
 	if err != nil {
-		ReturnAPITechnicalError(c, InternalServerError, err, "Error inserting data into the sales table")
+		ReturnAPITechnicalError(c, InternalServerError, err, "could not execute query in products table")
 		return
 	}
 

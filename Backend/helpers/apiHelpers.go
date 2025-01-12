@@ -22,7 +22,7 @@ func (s *Server) InitializeRoutes() error {
 
 	// Update CORS config
 	config := cors.Config{
-		AllowOrigins:     []string{"http://localhost:3000"},                            // Allow base origin
+		AllowOrigins:     []string{"https://beautiful-dodol-576dca.netlify.app"},       // Allow base origin
 		AllowMethods:     []string{"GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"}, // Include OPTIONS for preflight
 		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
 		AllowCredentials: true,

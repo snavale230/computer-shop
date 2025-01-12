@@ -48,7 +48,7 @@ const Orders = () => {
   // Load products data initially
   useEffect(() => {
     document.title = "Orders | Admin Dashboard";
-    fetchData("products");
+    fetchData("sales");
   }, []);
 
   // Fetch data when the active tab changes
@@ -84,16 +84,14 @@ const Orders = () => {
               </h4>
               {/* Tab navigation */}
               <div className="tab-navigation">
-                <button onClick={() => setActiveTab("products")}>Add Products History</button>
+                {/* <button onClick={() => setActiveTab("products")}>Add Products History</button> */}
                 <button onClick={() => setActiveTab("sales")}>Sell Product History</button>
               </div><hr/>
               {/* Tab content */}
               <div className="tab-content">
-                {activeTab === "products" ? (
-                  <TransactionDataTable onRowClick={handleRowClick} tableRows={selectedRowId} />
-                ) : (
+                {
                   <SellDataTable onRowClick={handleRowClick} tableRows={selectedRowId} />
-                )}
+                }
               </div>
             </div>
           </div>

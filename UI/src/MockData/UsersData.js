@@ -5,13 +5,13 @@ export const userColumns = [
     field: "id",
     headerName: "ID",
     headerClassName: "custom_header",
-    width: 50,
+    width: 70,
   },
   {
     field: "product_name",
     headerName: "Product",
     headerClassName: "custom_header",
-    width: 90,
+    width: 120,
   },
   {
     field: "category",
@@ -23,7 +23,7 @@ export const userColumns = [
     field: "product_brand",
     headerName: "Brand",
     headerClassName: "custom_header",
-    width: 70,
+    width: 80,
   },
 
   {
@@ -36,7 +36,7 @@ export const userColumns = [
     field: "product_status",
     headerName: "Status",
     headerClassName: "custom_header",
-    width: 80,
+    width: 90,
   },
   {
     field: "product_quantity",
@@ -48,7 +48,7 @@ export const userColumns = [
     field: "supplier_name",
     headerName: "Supplier Name",
     headerClassName: "custom_header",
-    width: 120,
+    width: 130,
   },
   {
     field: "supplier_contact",
@@ -60,13 +60,13 @@ export const userColumns = [
     field: "date_added",
     headerName: "Added Date",
     headerClassName: "custom_header",
-    width: 110,
+    width: 130,
   },
   {
     field: "last_updated",
     headerName: "Updated Date",
     headerClassName: "custom_header",
-    width: 110,
+    width: 130,
   },
 ];
 

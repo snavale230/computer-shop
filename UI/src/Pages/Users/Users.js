@@ -21,6 +21,7 @@ const Users = () => {
     customerMobile: "",
     customerName: "",
     productPrice: 500,
+    serialNo: "",
   });
   const navigate = useNavigate();
 
@@ -59,7 +60,8 @@ const Users = () => {
         productId: selectedProductId, // Use the selected product ID here
         customerMobile: formData.customerMobile,
         customerName: formData.customerName,
-        productPrice: formData.productPrice,
+        productPrice: parseInt(formData.productPrice, 10),
+        serialNo: formData.serialNo,
       };
 
       const response = await sellProductAPI(payload);
@@ -162,10 +164,10 @@ const Users = () => {
                       >
                         Sell
                       </button>
-                      <div style={{ color: "blue" }}>
+                      {/* <div style={{ color: "blue" }}>
                         <EditIcon />
-                      </div>
-                      <div style={{ color: "gray" }} onClick={() => handleDelete(params.row.id)}>
+                      </div> */}
+                      <div style={{ color: "gray",cursor:'pointer' }} onClick={() => handleDelete(params.row.id)} >
                         <DeleteIcon />
                       </div>
                     </div>
@@ -211,6 +213,13 @@ const Users = () => {
               type="number"
               name="productPrice"
               value={formData.productPrice}
+              onChange={handleInputChange}
+            />
+            <label>Product Serial No</label>
+            <input
+              type="text"
+              name="serialNo"
+              value={formData.serialNo}
               onChange={handleInputChange}
             />
             <div>

@@ -58,10 +58,12 @@ CREATE TABLE IF NOT EXISTS public.sales (
     sale_price DECIMAL(10, 2) NOT NULL,  -- Price at the time of sale
     sale_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- Automatically sets the sale date and time
     customer_name VARCHAR(255),  -- Optional: Store customer name
+    serial_no VARCHAR(255),  -- Optional: Store serial number of product
+    description TEXT,  -- Optional: Additional description of sale
     customer_mobile VARCHAR(55)
 ); 
 
-alter table sales drop column product_id
+alter table sales drop column product_id;
 ALTER TABLE products ALTER COLUMN product_id TYPE varchar(55) USING product_id::varchar(55);
 
 
@@ -78,8 +80,3 @@ ALTER TABLE sales ALTER COLUMN sale_id TYPE varchar(55) USING sale_id::varchar(5
 CREATE SEQUENCE sales_seq START WITH 1 INCREMENT BY 1; 
 
 ALTER TABLE sales alter column sale_id set DEFAULT concat('S', nextval('sales_seq'::regclass));
-
-
--- 23 June 2024
-ALTER TABLE sales ADD COLUMN description text;
-
